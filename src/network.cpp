@@ -28,10 +28,6 @@
 #include "whim_exception.hpp"
 
 using namespace whimap;
-socketbuf::socketbuf(const socketbuf& old)
-{
-    socket_fd = dup(old.socket_fd);
-}
 socketbuf::socketbuf(socketbuf&& old)
 {
     socket_fd = old.socket_fd;

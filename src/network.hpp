@@ -54,25 +54,24 @@ namespace whimap
         }
 
     public:
-        socketbuf(const socketbuf&);
-        socketbuf(socketbuf&&);
-        socketbuf(socket_descriptor&& fd);
+        explicit socketbuf(const socketbuf&) = delete;
+        explicit socketbuf(socketbuf&&);
+        explicit socketbuf(socket_descriptor&& fd);
     };
-    class socketstream : public std::iostream
+    class socketstream : public socketbuf ,public std::iostream
     {
     public:
         using socket_descriptor = socketbuf::socket_descriptor;
 
     private:
-        socketbuf buffer;
 
     public:
-        socketstream(socket_descriptor&& fd)
-            : buffer(std::forward<socket_descriptor>(fd))
-            , std::iostream(&buffer){};
-        socketstream(const socketstream& old)
-            : buffer(old.buffer){};
-        socketstream(socketstream&& old)
-            : buffer(std::forward<socketbuf>(old.buffer)){};
+        explicit socketstream(socket_descriptor&& fd)
+            : socketbuf(std::forward<socket_descriptor>(fd))
+            , std::iostream(this){};
+        socketstream(const socketstream& old) = delete;
+        explicit socketstream(socketstream&& old)
+            : socketbuf(std::forward<socketbuf>(old))
+            , std::iostream(&old){};
     };
 } // namespace whimap
