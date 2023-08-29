@@ -21,6 +21,8 @@
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+
+#include "whim_exception.hpp"
 namespace whimap
 {
     class socketbuf : public std::streambuf
