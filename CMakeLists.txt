@@ -10,11 +10,9 @@ file(GLOB PROJ_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
 add_compile_options(-Wall -Wextra)
 add_compile_options(-fsanitize=leak -fsanitize=address -fsanitize=undefined)
+add_compile_options(-mavx2)
 add_link_options(-fsanitize=leak -fsanitize=address -fsanitize=undefined)
-
-add_library(scratch3 ${PROJ_SRC})
-target_include_directories(scratch3 PRIVATE)
-target_link_libraries(scratch3)
+add_compile_options(-mavx2)
 
 enable_testing()
 add_subdirectory(test)
