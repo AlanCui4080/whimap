@@ -42,10 +42,12 @@ auto socketbuf::xsgetn(char_type* s, std::streamsize n) -> std::streamsize
     auto result = recv(socket_fd, s, n, 0);
     if(result < 0)
         throw network_failure(errno, "failed to recv");
+    return result;
 }
 auto socketbuf::xsputn(const char_type* s, std::streamsize n) -> std::streamsize
 {
     auto result = send(socket_fd, s, n, 0);
     if(result < 0)
         throw network_failure(errno, "failed to send");
+    return result;
 }
