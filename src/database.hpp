@@ -14,19 +14,33 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
+#include <memory>
+#include <type_traits>
 #include "whim_framework.hpp"
 namespace whimap
 {
     class row
     {
-
     };
+    template <typename T>
+    using limit_operation = std::function<T(const T&, const T&)>;
     class column
     {
+    public:
+        using float_type = fp32;
+        using simd_type  = fp32v;
 
+    private:
+        size_t     size;
+        simd_type* data;
+
+    public:
+        column(float_type* ps, size_t s);
+
+        auto min() const -> float_type;
+        auto max() const -> float_type;
     };
     class table
     {
-
     };
 } // namespace whimap
