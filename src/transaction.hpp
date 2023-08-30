@@ -33,25 +33,11 @@ namespace whimap
 
     private:
     public:
-        using type_enum = enum {
-            TRANSACTION_UNKNOWN,
-            TRANSACTION_NUM_SUM,
-            TRANSACTION_NUM_AVG,
-            TRANSACTION_NUM_MIN,
-            TRANSACTION_NUM_MAX,
-            TRANSACTION_NUM_ROUND,
-            TRANSACTION_LOGIC_COUNT,
-            TRANSACTION_LOGIC_HAVING,
-            TRANSACTION_LOGIC_EXISTS,
-            TRANSACTION_LOGIC_GROUPBY,
-            TRANSACTION_MAX,
-        };
-        static_assert(
-            impl::size_impl == TRANSACTION_MAX,
-            "unmatched number of transaction type_enum to transaction impl");
+        using type_enum = impl::type_enum;
         using job_type = impl::job_type;
+
     private:
-        std::vector<transaction&> dependencies;
+        std::vector<transaction*>  dependencies;
         job_type                  action;
         type_enum                 type;
 

@@ -17,25 +17,46 @@
 #include <functional>
 
 #include "database.hpp"
+#include "whim_framework.hpp"
 namespace whimap
 {
     namespace impl
     {
-        using job_type = std::function<column&(column&)>;
-        static const job_type transaction_impl[] = {
-            [](column&) -> column&{},
-            [](column&) -> column&{},
-            [](column&) -> column&{},
-            [](column&) -> column&{},
-            [](column&) -> column&{},
-            [](column&) -> column&{},
-            [](column&) -> column&{},
-            [](column&) -> column&{},
-            [](column&) -> column&{},
-            [](column&) -> column&{}
+        using job_type = std::function<column::float_type(const column&)>;
+        static const job_type default_job =
+            [](const column&) -> column::float_type {
+            throw std::invalid_argument("bug: a undefined job has been called");
         };
-        static constexpr auto size_impl = sizeof(transaction_impl)/sizeof(job_type);
+        typedef enum
+        {
+            TRANSACTION_UNKNOWN,
+            TRANSACTION_NUM_SUM,
+            TRANSACTION_NUM_AVG,
+            TRANSACTION_NUM_MIN,
+            TRANSACTION_NUM_MAX,
+            TRANSACTION_NUM_ROUND,
+            TRANSACTION_LOGIC_COUNT,
+            TRANSACTION_LOGIC_HAVING,
+            TRANSACTION_LOGIC_EXISTS,
+            TRANSACTION_LOGIC_GROUPBY,
+            TRANSACTION_MAX,
+        } type_enum;
+        static const job_type jobs[] = {
+            default_job,
+            default_job,
+            default_job,
+            [](const column& v) -> column::float_type { return v.min(); },
+            [](const column& v) -> column::float_type { return v.max(); },
+            default_job,
+            default_job,
+            default_job,
+            default_job,
+            default_job
+        };
+        static constexpr auto size_impl = sizeof(jobs) / sizeof(job_type);
+        static_assert(
+            impl::size_impl == TRANSACTION_MAX,
+            "unmatched number of transaction type_enum to transaction impl");
     } // namespace impl
-    
-} // namespace whimap
 
+} // namespace whimap
