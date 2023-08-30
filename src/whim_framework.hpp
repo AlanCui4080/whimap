@@ -20,6 +20,7 @@
 #include <atomic>
 #include <type_traits>
 #include <experimental/simd>
+/// to be refactor in libhwy
 namespace whimap
 {
     namespace simd
@@ -51,8 +52,14 @@ namespace whimap
     {
         return v / std::experimental::native_simd<F>::size();
     }
-
+/**
+ * @brief ailgnas a cacheline
+ */
 #define align_cache alignas(32)
+/**
+ * @brief ailgnas the memory alignment required by the simd
+ * @tparam type of value
+ */
 #define align_simd(T)                              \
     alignas(std::experimental::memory_alignment_v< \
             std::experimental::native_simd<T>>)
@@ -62,7 +69,6 @@ namespace whimap
    * the critical section, and only allow one writer to enter it when
    * no one is reading.
    *
-   * @headerfile whim_framework
    * @attention assume you a reader on default to reuse std::lock_guard,
    * if not, call lock and unlock manually
    */
@@ -77,6 +83,13 @@ namespace whimap
             WRITE,
             READ
         } character_enum;
+        /**
+         * @brief lock a rwlock
+         * 
+         * @param me your role
+         * @attention assume you a reader on default to reuse std::lock_guard,
+         * if not, call lock and unlock manually
+         */
         void lock(character_enum me = READ)
         {
             if (me == READ)
@@ -98,6 +111,13 @@ namespace whimap
                 }
             }
         }
+        /**
+         * @brief unlock a rwlock
+         * 
+         * @param me your role
+         * @attention assume you a reader on default to reuse std::lock_guard,
+         * if not, call lock and unlock manually
+         */
         void unlock(character_enum me = READ)
         {
             if (me == READ)

@@ -25,9 +25,13 @@ namespace whimap
     class row
     {
     };
-
-    template <typename T>
-    class basic_column
+    /**
+     * @brief the base class of every column
+     * 
+     * @headerfile database.hpp
+     * @tparam T value type
+     */
+    template <typename T> class basic_column
     {
     public:
         using value_type = T;
@@ -35,6 +39,14 @@ namespace whimap
         using simd_type  = fp32v;
 
     public:
+        /**
+         * @brief get summary of all elements in this column
+         * 
+         * @return value_type 
+         * 
+         * @date 2023/8/31
+         * @author AlanCui4080
+         */
         virtual value_type sum() = 0;
         virtual value_type min() = 0;
         virtual value_type max() = 0;
@@ -43,7 +55,12 @@ namespace whimap
         rwlock     lock;
         size_t     size;
         simd_type* data;
-
+    /**
+     * @brief Construct a new basic column object
+     * 
+     * @param ps pointer to a **aligned** by align_simd(T) array 
+     * @param s size of elements which is multiplies of simd_type::size()
+     */
         basic_column(float_type* ps, size_t s)
             : size(s)
             , data(reinterpret_cast<simd_type*>(ps))
@@ -54,14 +71,26 @@ namespace whimap
                 throw std::invalid_argument("unaligned length is not allowed");
         }
     };
-    template <typename T>
-    class column : public basic_column<T>
+    /**
+     * @brief default template implmention of column
+     * 
+     * @warning never use it, its designed to be specilized
+     * 
+     * @tparam T value type
+     */
+    template <typename T> class column : public basic_column<T>
     {
     };
-    template <>
-    class column<float> : public basic_column<float>
+    /**
+     * @brief a column which stores a float
+     * 
+     * 
+     * @headerfile database.hpp
+     * @tparam T value type
+     */
+    template <> class column<float> : public basic_column<float>
     {
-        public:
+    public:
         virtual value_type sum() override;
         virtual value_type min() override;
         virtual value_type max() override;
