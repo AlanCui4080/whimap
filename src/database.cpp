@@ -24,7 +24,7 @@ auto column<float>::min() -> value_type
     simd_type vlim = std::numeric_limits<float_type>::quiet_NaN();
     for (size_t i = 0; i < size; i++)
     {
-        vlim = std::move(simd::min(data[i], vlim));
+        vlim = simd::min(data[i], vlim);
     }
     float_type flim = std::numeric_limits<float_type>::quiet_NaN();
     for (size_t i = 0; i < simd_type::size(); i++)
@@ -39,7 +39,7 @@ auto column<float>::max() -> value_type
     simd_type vlim = std::numeric_limits<float_type>::quiet_NaN();
     for (size_t i = 0; i < size; i++)
     {
-        vlim = std::move(simd::max(data[i], vlim));
+        vlim = simd::max(data[i], vlim);
     }
     float_type flim = std::numeric_limits<float_type>::quiet_NaN();
     for (size_t i = 0; i < simd_type::size(); i++)
