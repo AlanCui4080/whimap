@@ -16,9 +16,11 @@
 #include "database.hpp"
 #include <stdexcept>
 #include <limits>
+#include <mutex>
 using namespace whimap;
 auto column<float>::min() const -> value_type
 {
+    std::lock_guard lg(lock);
     simd_type vlim = std::numeric_limits<float_type>::quiet_NaN();
     for (size_t i = 0; i < size; i++)
     {
@@ -33,6 +35,7 @@ auto column<float>::min() const -> value_type
 }
 auto column<float>::max() const -> value_type
 {
+    std::lock_guard lg(lock);
     simd_type vlim = std::numeric_limits<float_type>::quiet_NaN();
     for (size_t i = 0; i < size; i++)
     {

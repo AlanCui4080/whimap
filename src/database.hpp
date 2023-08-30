@@ -40,6 +40,7 @@ namespace whimap
         virtual value_type max() const = 0;
 
     public:
+        rwlock     lock;
         size_t     size;
         simd_type* data;
 
