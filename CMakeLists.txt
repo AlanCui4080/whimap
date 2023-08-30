@@ -13,6 +13,7 @@ add_compile_options(-fsanitize=leak -fsanitize=address -fsanitize=undefined)
 add_compile_options(-mavx2)
 add_link_options(-fsanitize=leak -fsanitize=address -fsanitize=undefined)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/)
+add_executable(whimap ${PROJ_SRC})
 include(thirdparty)
 
 enable_testing()
