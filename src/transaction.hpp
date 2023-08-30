@@ -17,6 +17,7 @@
 #include <future>
 #include <thread>
 #include <vector>
+#include <any>
 #include <functional>
 
 #include "database.hpp"
@@ -27,23 +28,21 @@ namespace whimap
     class worker : public worker_base
     {
     };
-    class transaction : std::future<void>
+    template <typename T>
+    class transaction : std::future<T>
     {
         friend class worker;
 
-    private:
     public:
-        using type_enum = impl::type_enum;
-        using job_type = impl::job_type;
+        using type_enum = job_enum;
+        using col_type  = T;
 
     private:
-        std::vector<transaction*>  dependencies;
-        job_type                  action;
+        std::vector<transaction*> dependencies;
+        col_type&                 target;
         type_enum                 type;
 
     public:
-        transaction(const transaction&) = delete;
-        transaction(transaction&&);
-        transaction(type_enum t);
+        transaction(type_enum t, T& col);
     };
 } // namespace whimap

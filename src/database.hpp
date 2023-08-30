@@ -16,29 +16,54 @@
 #pragma once
 #include <memory>
 #include <type_traits>
+#include <functional>
+#include <optional>
 #include "whim_framework.hpp"
+#include "transcation_impl.hpp"
 namespace whimap
 {
     class row
     {
     };
+
     template <typename T>
-    using limit_operation = std::function<T(const T&, const T&)>;
-    class column
+    class basic_column
     {
     public:
+        using value_type = T;
         using float_type = fp32;
         using simd_type  = fp32v;
 
-    private:
+    public:
+        virtual value_type sum() const = 0;
+        virtual value_type min() const = 0;
+        virtual value_type max() const = 0;
+
+    public:
         size_t     size;
         simd_type* data;
 
-    public:
-        column(float_type* ps, size_t s);
-
-        auto min() const -> float_type;
-        auto max() const -> float_type;
+        basic_column(float_type* ps, size_t s)
+            : size(s)
+            , data(reinterpret_cast<simd_type*>(ps))
+        {
+            if (ps == nullptr && s)
+                throw std::invalid_argument("nullptr to construct a column");
+            if (!is_aligned_simd<float_type>(s))
+                throw std::invalid_argument("unaligned length is not allowed");
+        }
+    };
+    template <typename T>
+    class column : public basic_column<T>
+    {
+    };
+    template <>
+    class column<float> : public basic_column<float>
+    {
+        public:
+        virtual value_type sum() const override;
+        virtual value_type min() const override;
+        virtual value_type max() const override;
     };
     class table
     {

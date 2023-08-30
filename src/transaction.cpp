@@ -15,3 +15,4 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "transaction.hpp"
 #include "whim_framework.hpp"
+using namespace whimap;

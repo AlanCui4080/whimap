@@ -17,16 +17,7 @@
 #include <stdexcept>
 #include <limits>
 using namespace whimap;
-column::column(float_type* ps, size_t s)
-    : size(s)
-    , data(reinterpret_cast<simd_type*>(ps))
-{
-    if (ps == nullptr && s)
-        throw std::invalid_argument("nullptr to construct a column");
-    if (!is_aligned_simd<float_type>(s))
-        throw std::invalid_argument("unaligned length is not allowed");
-}
-auto column::min() const -> float_type
+auto column<float>::min() const -> value_type
 {
     simd_type vlim = std::numeric_limits<float_type>::quiet_NaN();
     for (size_t i = 0; i < size; i++)
@@ -40,7 +31,7 @@ auto column::min() const -> float_type
     }
     return flim;
 }
-auto column::max() const -> float_type
+auto column<float>::max() const -> value_type
 {
     simd_type vlim = std::numeric_limits<float_type>::quiet_NaN();
     for (size_t i = 0; i < size; i++)
