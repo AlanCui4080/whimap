@@ -35,9 +35,9 @@ namespace whimap
         using simd_type  = fp32v;
 
     public:
-        virtual value_type sum() const = 0;
-        virtual value_type min() const = 0;
-        virtual value_type max() const = 0;
+        virtual value_type sum() = 0;
+        virtual value_type min() = 0;
+        virtual value_type max() = 0;
 
     public:
         rwlock     lock;
@@ -62,9 +62,9 @@ namespace whimap
     class column<float> : public basic_column<float>
     {
         public:
-        virtual value_type sum() const override;
-        virtual value_type min() const override;
-        virtual value_type max() const override;
+        virtual value_type sum() override;
+        virtual value_type min() override;
+        virtual value_type max() override;
     };
     class table
     {

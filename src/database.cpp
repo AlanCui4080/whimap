@@ -18,7 +18,7 @@
 #include <limits>
 #include <mutex>
 using namespace whimap;
-auto column<float>::min() const -> value_type
+auto column<float>::min() -> value_type
 {
     std::lock_guard lg(lock);
     simd_type vlim = std::numeric_limits<float_type>::quiet_NaN();
@@ -33,7 +33,7 @@ auto column<float>::min() const -> value_type
     }
     return flim;
 }
-auto column<float>::max() const -> value_type
+auto column<float>::max() -> value_type
 {
     std::lock_guard lg(lock);
     simd_type vlim = std::numeric_limits<float_type>::quiet_NaN();
