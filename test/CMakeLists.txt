@@ -1,5 +1,5 @@
 include_directories(GLOB ${PROJECT_SOURCE_DIR}/src)
-add_executable(simd_requirement simd_requirement.cpp)
-add_test(NAME simd COMMAND simd_requirement)
 add_executable(rwlock_race rwlock_race.cpp)
 add_test(NAME rw_lock COMMAND rwlock_race)
+add_executable(simd simd.cpp)
+add_test(NAME simd COMMAND simd)

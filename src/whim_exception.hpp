@@ -27,4 +27,10 @@ namespace whimap
         network_failure(decltype(errno) v,const char* s)
         : system_error(std::error_code(v,std::generic_category()),s){};
     };
+    class simd_failure : public std::domain_error
+    {
+        public:
+        simd_failure(const char* s)
+        : domain_error(s){};
+    };
 } // namespace whimap

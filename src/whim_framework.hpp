@@ -23,35 +23,6 @@
 /// to be refactor in libhwy
 namespace whimap
 {
-    namespace simd
-    {
-        using std::experimental::max;
-        using std::experimental::min;
-    } // namespace simd
-
-    constexpr auto width_vmm = 256;
-    using fp32               = float;
-    using fp32v              = std::experimental::native_simd<fp32>;
-    static_assert(sizeof(float) * 8 == 32,
-                  "width of fp32 is not satisfied 32-bits");
-    using fp64  = double;
-    using fp64v = std::experimental::native_simd<fp64>;
-    static_assert(sizeof(double) * 8 == 64,
-                  "width of fp64 is not satisfied 64-bits");
-    using fp128  = long double;
-    using fp128v = std::experimental::native_simd<fp128>;
-    static_assert(sizeof(long double) * 8 == 128,
-                  "width of fp128 is not satisfied 128-bits");
-    template <std::floating_point F, std::integral T>
-    constexpr auto is_aligned_simd(T v) noexcept -> bool
-    {
-        return !(v % std::experimental::native_simd<F>::size());
-    }
-    template <std::floating_point F, std::integral T>
-    constexpr auto to_simd_size(T v) -> size_t
-    {
-        return v / std::experimental::native_simd<F>::size();
-    }
 /**
  * @brief ailgnas a cacheline
  */

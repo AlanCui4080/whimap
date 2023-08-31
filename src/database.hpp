@@ -19,83 +19,104 @@
 #include <functional>
 #include <optional>
 #include "whim_framework.hpp"
-#include "transcation_impl.hpp"
+#include "whim_exception.hpp"
+#include <hwy/aligned_allocator.h>
+#include <hwy/highway.h>
 namespace whimap
 {
-    class row
+    namespace simd
     {
+        using namespace hwy;
+        using namespace hwy::HWY_NAMESPACE;
     };
     /**
-     * @brief the base class of every column
+     * @brief a psedo, continous vector of type S
      * 
-     * @headerfile database.hpp
-     * @tparam T value type
+     * @tparam S scalar type
      */
-    template <typename T> class basic_column
+    template <typename S> class expvec
     {
     public:
-        using value_type = T;
-        using float_type = fp32;
-        using simd_type  = fp32v;
+        using scalar_type           = S;
+        using simd_type             = simd::ScalableTag<scalar_type>;
+        using vector_type           = simd::VFromD<simd_type>;
+        using scalar_unique_ptr     = simd::AlignedFreeUniquePtr<scalar_type[]>;
+        using vector_unique_ptr     = simd::AlignedFreeUniquePtr<vector_type[]>;
+        static constexpr auto D_tag = simd_type();
+
+    private:
+        vector_unique_ptr vector_data;
+        size_t            vector_count;
 
     public:
-        /**
-         * @brief get summary of all elements in this column
-         * 
-         * @return value_type 
-         * 
-         * @date 2023/8/31
-         * @author AlanCui4080
-         */
-        virtual value_type sum() = 0;
-        virtual value_type min() = 0;
-        virtual value_type max() = 0;
-
-    public:
-        rwlock     lock;
-        size_t     size;
-        simd_type* data;
-    /**
-     * @brief Construct a new basic column object
-     * 
-     * @param ps pointer to a **aligned** by align_simd(T) array 
-     * @param s size of elements which is multiplies of simd_type::size()
-     */
-        basic_column(float_type* ps, size_t s)
-            : size(s)
-            , data(reinterpret_cast<simd_type*>(ps))
+        expvec(scalar_unique_ptr&& pa, size_t count)
+            : vector_data(reinterpret_cast<vector_type*>(pa.release()))
+            , vector_count(count / simd::Lanes(D_tag))
         {
-            if (ps == nullptr && s)
-                throw std::invalid_argument("nullptr to construct a column");
-            if (!is_aligned_simd<float_type>(s))
-                throw std::invalid_argument("unaligned length is not allowed");
         }
-    };
-    /**
-     * @brief default template implmention of column
-     * 
-     * @warning never use it, its designed to be specilized
-     * 
-     * @tparam T value type
-     */
-    template <typename T> class column : public basic_column<T>
-    {
-    };
-    /**
-     * @brief a column which stores a float
-     * 
-     * 
-     * @headerfile database.hpp
-     * @tparam T value type
-     */
-    template <> class column<float> : public basic_column<float>
-    {
+        constexpr auto size() const
+        {
+            return vector_count;
+        }
+        constexpr auto operator[](const size_t i) const -> const vector_type&
+        {
+            return vector_data[i];
+        }
+        constexpr auto operator[](const size_t i) -> vector_type&
+        {
+            return vector_data[i];
+        }
+
+    private:
+        using op2_type = decltype(simd::Add<vector_type>);
+        template <op2_type Opa>
+        inline auto op2(const expvec<S>& rv) const -> expvec<S>
+        {
+            if (rv.size() != vector_count)
+                throw simd_failure(
+                    "tring to operate between two different sized vector");
+            auto result = expvec(simd::AllocateAligned<scalar_type>(
+                                     vector_count * simd::Lanes(D_tag)),
+                                        vector_count * simd::Lanes(D_tag));
+            for (size_t i = 0; i < vector_count; i++)
+            {
+                result[i] = std::move(Opa(vector_data[i], rv.vector_data[i]));
+            }
+            return result;
+        }
+
     public:
-        virtual value_type sum() override;
-        virtual value_type min() override;
-        virtual value_type max() override;
-    };
-    class table
-    {
+        auto operator+(const expvec<S>& rv) const -> expvec<S>
+        {
+            return std::move(op2<simd::Add>(rv));
+        }
+        auto operator-(const expvec<S>& rv) const -> expvec<S>
+        {
+            return std::move(op2<simd::Sub>(rv));
+        }
+        auto operator*(const expvec<S>& rv) const -> expvec<S>
+        {
+            return std::move(op2<simd::Mul>(rv));
+        }
+        auto operator/(const expvec<S>& rv) const -> expvec<S>
+        {
+            return std::move(op2<simd::Div>(rv));
+        }
+        auto operator|(const expvec<S>& rv) const -> expvec<S>
+        {
+            return std::move(op2<simd::Or>(rv));
+        }
+        auto operator&(const expvec<S>& rv) const -> expvec<S>
+        {
+            return std::move(op2<simd::And>(rv));
+        }
+        auto operator<<(const expvec<S>& rv) const -> expvec<S>
+        {
+            return std::move(op2<simd::ShiftLeft>(rv));
+        }
+        auto operator>>(const expvec<S>& rv) const -> expvec<S>
+        {
+            return std::move(op2<simd::ShiftRight>(rv));
+        }
     };
 } // namespace whimap
