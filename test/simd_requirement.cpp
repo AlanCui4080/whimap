@@ -2,5 +2,5 @@
 #include <iostream>
 int main()
 {
-    return (HWY_SUPPORTED_TARGETS | HWY_SSE4);
+    return (HWY_STATIC_TARGET & HWY_AVX2);
 };
