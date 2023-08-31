@@ -1,6 +1,10 @@
-#include "database.hpp"
+#undef HWY_TARGET_INCLUDE
+#define HWY_TARGET_INCLUDE __FILE__
+#include <hwy/foreach_target.h>
+
 #include <hwy/print-inl.h>
 #include <iostream>
+#include "database.hpp"
 enum
 {
     ERR_RUNTIME_NOT_SATISFIED,

@@ -1,8 +1,11 @@
-#include "whim_framework.hpp"
+#include <algorithm>
+#include <whim_framework.hpp>
+#include <utility>
 #include <thread>
 #include <numeric>
 #include <iostream>
 #include <barrier>
+#include <vector>
 int main()
 {
     whimap::rwlock            lock;

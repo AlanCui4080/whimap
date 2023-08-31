@@ -32,7 +32,7 @@ jobs:
     - name: Get packages (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: sudo apt install -y libasio-dev libhwy-dev
-    - name: Get packages (Windows)
+    - name: Get packages (Macos)
       if: matrix.os == 'macos-13'
       run: brew install highway asio
     - name: Set reusable strings

@@ -19,8 +19,6 @@
 #include <semaphore>
 #include <atomic>
 #include <type_traits>
-#include <experimental/simd>
-/// to be refactor in libhwy
 namespace whimap
 {
 /**
