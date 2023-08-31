@@ -127,17 +127,18 @@ namespace whimap
         }
         // it works on my machine, but failed on CI/CD
         // search from global namespace
+        // god damn it, forget to remove simd::
         auto leading_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2<::hwy::simd::LeadingZeroCount>(rv);
+            return op2<::hwy::LeadingZeroCount>(rv);
         }
         auto trailing_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2<::hwy::simd::TrailingZeroCount>(rv);
+            return op2<::hwy::TrailingZeroCount>(rv);
         }
         auto highest_bit_index(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2<::hwy::simd::HighestSetBitIndex>(rv);
+            return op2<::hwy::HighestSetBitIndex>(rv);
         }
     };
 }
