@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
-#include <hwy/aligned_allocator.h>
 #include <hwy/highway.h>
+#include <hwy/aligned_allocator.h>
+#include <type_traits>
 #include "whim_exception.hpp"
 namespace whimap
 {
@@ -126,15 +127,21 @@ namespace whimap
         }
         auto leading_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2<simd::LeadingZeroCount>(rv);
+            return std::is_floating_point_v<scalar_type> ?
+                       nullptr :
+                       op2<simd::LeadingZeroCount>(rv);
         }
         auto trailing_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2<simd::TrailingZeroCount>(rv);
+            return std::is_floating_point_v<scalar_type> ?
+                       nullptr :
+                       op2<simd::TrailingZeroCount>(rv);
         }
         auto highest_bit_index(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2<simd::HighestSetBitIndex>(rv);
+            return std::is_floating_point_v<scalar_type> ?
+                       nullptr :
+                       op2<simd::HighestSetBitIndex>(rv);
         }
     };
 }

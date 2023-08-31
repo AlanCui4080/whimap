@@ -12,14 +12,15 @@ int main()
     std::barrier              lch1(16);
     std::barrier              lch2(16);
     std::vector<long>         a(512);
-    std::vector<std::jthread> init_writer;
+    std::vector<std::thread> init_writer;
     std::mutex                mx2, mx1;
     std::vector<long>         r1, r2;
-    std::vector<std::jthread> reader;
-    std::vector<std::jthread> writer;
-    std::vector<std::jthread> reader2;
+    std::vector<std::thread> reader;
+    std::vector<std::thread> writer;
+    std::vector<std::thread> reader2;
+    // back to std::thread for AppleClang!
     for (size_t i = 0; i < 2; i++)
-        init_writer.emplace_back(std::move(std::jthread(
+        init_writer.emplace_back(std::move(std::thread(
             [&]()
             {
                 lch1.arrive_and_wait();
@@ -30,7 +31,7 @@ int main()
             })));
 
     for (size_t i = 0; i < 14; i++)
-        reader.emplace_back(std::move(std::jthread(
+        reader.emplace_back(std::move(std::thread(
             [&]()
             {
                 lch1.arrive_and_wait();
@@ -41,7 +42,7 @@ int main()
                 exit(EXIT_SUCCESS);
             })));
     for (size_t i = 0; i < 2; i++)
-        writer.emplace_back(std::move(std::jthread(
+        writer.emplace_back(std::move(std::thread(
             [&]()
             {
                 lch2.arrive_and_wait();
@@ -51,7 +52,7 @@ int main()
                 exit(EXIT_SUCCESS);
             })));
     for (size_t i = 0; i < 14; i++)
-        reader2.emplace_back(std::move(std::jthread(
+        reader2.emplace_back(std::move(std::thread(
             [&]()
             {
                 lch2.arrive_and_wait();
