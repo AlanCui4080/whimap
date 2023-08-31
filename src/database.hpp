@@ -139,4 +139,11 @@ namespace whimap
             return op2<simd::HighestSetBitIndex>(rv);
         }
     };
+    template <typename S> 
+    class column
+    {
+        public:
+        using scalar_type = expvec<S>;
+        using vector_type = std::vector<scalar_type>;
+    };
 } // namespace whimap
