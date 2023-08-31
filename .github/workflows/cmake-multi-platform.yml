@@ -24,6 +24,7 @@ jobs:
       matrix:
         build_type: [Release]
         cpp_compiler: [g++,clang++]
+        optizimer: [O1,O2,O3,Os,Og,Ofast]
 
     steps:
     - uses: actions/checkout@v3
@@ -41,6 +42,7 @@ jobs:
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DOPTIZIME=${{ matrix.optizimer }}
         -S ${{ github.workspace }}
 
     - name: Build
@@ -51,3 +53,5 @@ jobs:
       # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest --build-config ${{ matrix.build_type }}
+
+      

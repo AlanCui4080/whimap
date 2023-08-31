@@ -80,7 +80,7 @@ namespace whimap
                                         vector_count * simd::Lanes(D_tag));
             for (size_t i = 0; i < vector_count; i++)
             {
-                result[i] = std::move(Opa(vector_data[i], rv.vector_data[i]));
+                result[i] = Opa(vector_data[i], rv.vector_data[i]);
             }
             return result;
         }
@@ -88,35 +88,35 @@ namespace whimap
     public:
         auto operator+(const expvec<S>& rv) const -> expvec<S>
         {
-            return std::move(op2<simd::Add>(rv));
+            return op2<simd::Add>(rv);
         }
         auto operator-(const expvec<S>& rv) const -> expvec<S>
         {
-            return std::move(op2<simd::Sub>(rv));
+            return op2<simd::Sub>(rv);
         }
         auto operator*(const expvec<S>& rv) const -> expvec<S>
         {
-            return std::move(op2<simd::Mul>(rv));
+            return op2<simd::Mul>(rv);
         }
         auto operator/(const expvec<S>& rv) const -> expvec<S>
         {
-            return std::move(op2<simd::Div>(rv));
+            return op2<simd::Div>(rv);
         }
         auto operator|(const expvec<S>& rv) const -> expvec<S>
         {
-            return std::move(op2<simd::Or>(rv));
+            return op2<simd::Or>(rv);
         }
         auto operator&(const expvec<S>& rv) const -> expvec<S>
         {
-            return std::move(op2<simd::And>(rv));
+            return op2<simd::And>(rv);
         }
         auto operator<<(const expvec<S>& rv) const -> expvec<S>
         {
-            return std::move(op2<simd::ShiftLeft>(rv));
+            return op2<simd::ShiftLeft>(rv);
         }
         auto operator>>(const expvec<S>& rv) const -> expvec<S>
         {
-            return std::move(op2<simd::ShiftRight>(rv));
+            return op2<simd::ShiftRight>(rv);
         }
     };
 } // namespace whimap
