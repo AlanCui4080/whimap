@@ -131,17 +131,6 @@ namespace whimap
         // update: add a alias for ::hwy::HWY_NAMESPACE
         auto leading_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
-<<<<<<< HEAD
-            return op2<::ghyn::LeadingZeroCount>(rv);
-        }
-        auto trailing_zerocount(const expvec<S>& rv) const -> expvec<S>
-        {
-            return op2<::ghyn::TrailingZeroCount>(rv);
-        }
-        auto highest_bit_index(const expvec<S>& rv) const -> expvec<S>
-        {
-            return op2<::ghyn::HighestSetBitIndex>(rv);
-=======
             return op2<simd::LeadingZeroCount>(rv);
         }
         auto trailing_zerocount(const expvec<S>& rv) const -> expvec<S>
@@ -151,7 +140,6 @@ namespace whimap
         auto highest_bit_index(const expvec<S>& rv) const -> expvec<S>
         {
             return op2<simd::HighestSetBitIndex>(rv);
->>>>>>> parent of 8cb14b9 (fix: logical bitops was not disabled on floating point)
         }
     };
 }
