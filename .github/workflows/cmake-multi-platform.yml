@@ -10,8 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-
+    runs-on: VM-0-2-debian
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
       fail-fast: false
@@ -23,15 +22,11 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        os: [ubuntu-latest]
         build_type: [Release]
         cpp_compiler: [g++,clang++]
 
     steps:
     - uses: actions/checkout@v3
-    - name: Get packages (Linux)
-      if: matrix.os == 'ubuntu-latest'
-      run: sudo apt install -y libasio-dev libhwy-dev
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
