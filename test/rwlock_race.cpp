@@ -20,7 +20,7 @@ int main()
     std::vector<std::thread> reader2;
     // back to std::thread for AppleClang!
     for (size_t i = 0; i < 2; i++)
-        init_writer.emplace_back(std::move(std::thread(
+        init_writer.emplace_back(std::thread(
             [&]()
             {
                 lch1.arrive_and_wait();
@@ -28,10 +28,10 @@ int main()
                 std::for_each(a.begin(), a.end(), [](long& v) { v = 10; });
                 lock.unlock(whimap::rwlock::WRITE);
                 exit(EXIT_SUCCESS);
-            })));
+            }));
 
     for (size_t i = 0; i < 14; i++)
-        reader.emplace_back(std::move(std::thread(
+        reader.emplace_back(std::thread(
             [&]()
             {
                 lch1.arrive_and_wait();
@@ -40,9 +40,9 @@ int main()
                 std::lock_guard lmg(mx1);
                 r2.push_back(sum);
                 exit(EXIT_SUCCESS);
-            })));
+            }));
     for (size_t i = 0; i < 2; i++)
-        writer.emplace_back(std::move(std::thread(
+        writer.emplace_back(std::thread(
             [&]()
             {
                 lch2.arrive_and_wait();
@@ -50,9 +50,9 @@ int main()
                 std::for_each(a.begin(), a.end(), [](long& v) { v = 20; });
                 lock.unlock(whimap::rwlock::WRITE);
                 exit(EXIT_SUCCESS);
-            })));
+            }));
     for (size_t i = 0; i < 14; i++)
-        reader2.emplace_back(std::move(std::thread(
+        reader2.emplace_back(std::thread(
             [&]()
             {
                 lch2.arrive_and_wait();
@@ -61,7 +61,7 @@ int main()
                 std::lock_guard lmg(mx2);
                 r2.push_back(sum);
                 exit(EXIT_SUCCESS);
-            })));
+            }));
 
     if (!((std::accumulate(r1.begin(), r1.end(), 0) == 5120) &&
         (std::accumulate(r2.begin(), r2.end(), 0) == 10240)))
