@@ -125,23 +125,19 @@ namespace whimap
         {
             return op2<simd::PopulationCount>(rv);
         }
+        // it works on my machine, but failed on CI/CD
+        // search from global namespace
         auto leading_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2 < std::is_floating_point_v<scalar_type> ?
-                       nullptr :
-                       simd::LeadingZeroCount > (rv);
+            return op2<::hwy::simd::LeadingZeroCount>(rv);
         }
         auto trailing_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2 < std::is_floating_point_v<scalar_type> ?
-                       nullptr :
-                       simd::TrailingZeroCount > (rv);
+            return op2<::hwy::simd::TrailingZeroCount>(rv);
         }
         auto highest_bit_index(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2 < std::is_floating_point_v<scalar_type> ?
-                       nullptr :
-                       simd::HighestSetBitIndex > (rv);
+            return op2<::hwy::simd::HighestSetBitIndex>(rv);
         }
     };
 }
