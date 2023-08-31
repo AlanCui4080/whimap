@@ -23,13 +23,6 @@
 namespace whimap
 {
     HWY_BEFORE_NAMESPACE();
-
-#if !HWY_SSE4
-#warning SSE4 is not enabled, performance may be poor
-#endif
-#if !HWY_SSE2
-#error not supported with out SSE2, cuz performance is too poor
-#endif
     /**
      * @brief a psedo, continous vector of type S
      * 
