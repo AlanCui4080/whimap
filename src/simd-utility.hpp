@@ -127,21 +127,21 @@ namespace whimap
         }
         auto leading_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
-            return std::is_floating_point_v<scalar_type> ?
+            return op2 < std::is_floating_point_v<scalar_type> ?
                        nullptr :
-                       op2<simd::LeadingZeroCount>(rv);
+                       simd::LeadingZeroCount > (rv);
         }
         auto trailing_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
-            return std::is_floating_point_v<scalar_type> ?
+            return op2 < std::is_floating_point_v<scalar_type> ?
                        nullptr :
-                       op2<simd::TrailingZeroCount>(rv);
+                       simd::TrailingZeroCount > (rv);
         }
         auto highest_bit_index(const expvec<S>& rv) const -> expvec<S>
         {
-            return std::is_floating_point_v<scalar_type> ?
+            return op2 < std::is_floating_point_v<scalar_type> ?
                        nullptr :
-                       op2<simd::HighestSetBitIndex>(rv);
+                       simd::HighestSetBitIndex > (rv);
         }
     };
 }
