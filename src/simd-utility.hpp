@@ -17,6 +17,9 @@
 #include <hwy/aligned_allocator.h>
 #include <hwy/highway.h>
 #include "whim_exception.hpp"
+#if !(HWY_STATIC_TARGET & HWY_AVX2)
+#error HWY_STATIC_TARGET is not supporting AVX2
+#endif
 namespace ghyn = hwy::HWY_NAMESPACE;
 namespace whimap
 {
