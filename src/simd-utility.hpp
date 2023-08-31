@@ -18,6 +18,7 @@
 #include <hwy/aligned_allocator.h>
 #include <type_traits>
 #include "whim_exception.hpp"
+namespace ghyn = hwy::HWY_NAMESPACE;
 namespace whimap
 {
     // yes, again we turn it back to static dispatch
@@ -128,17 +129,18 @@ namespace whimap
         // it works on my machine, but failed on CI/CD
         // search from global namespace
         // god damn it, forget to remove simd::
+        // update: add a alias for ::hwy::HWY_NAMESPACE
         auto leading_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2<::hwy::LeadingZeroCount>(rv);
+            return op2<::ghyn::LeadingZeroCount>(rv);
         }
         auto trailing_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2<::hwy::TrailingZeroCount>(rv);
+            return op2<::ghyn::TrailingZeroCount>(rv);
         }
         auto highest_bit_index(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2<::hwy::HighestSetBitIndex>(rv);
+            return op2<::ghyn::HighestSetBitIndex>(rv);
         }
     };
 }
