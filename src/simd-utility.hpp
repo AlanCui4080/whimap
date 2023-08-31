@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
-#include <hwy/highway.h>
 #include <hwy/aligned_allocator.h>
-#include <type_traits>
+#include <hwy/highway.h>
 #include "whim_exception.hpp"
 namespace ghyn = hwy::HWY_NAMESPACE;
 namespace whimap
@@ -132,6 +131,7 @@ namespace whimap
         // update: add a alias for ::hwy::HWY_NAMESPACE
         auto leading_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
+<<<<<<< HEAD
             return op2<::ghyn::LeadingZeroCount>(rv);
         }
         auto trailing_zerocount(const expvec<S>& rv) const -> expvec<S>
@@ -141,6 +141,17 @@ namespace whimap
         auto highest_bit_index(const expvec<S>& rv) const -> expvec<S>
         {
             return op2<::ghyn::HighestSetBitIndex>(rv);
+=======
+            return op2<simd::LeadingZeroCount>(rv);
+        }
+        auto trailing_zerocount(const expvec<S>& rv) const -> expvec<S>
+        {
+            return op2<simd::TrailingZeroCount>(rv);
+        }
+        auto highest_bit_index(const expvec<S>& rv) const -> expvec<S>
+        {
+            return op2<simd::HighestSetBitIndex>(rv);
+>>>>>>> parent of 8cb14b9 (fix: logical bitops was not disabled on floating point)
         }
     };
 }
