@@ -10,18 +10,14 @@ file(GLOB PROJ_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 if(${OPTIZIME})
 add_compile_options(-${OPTIZIME})
 elseif()
-add_compile_options(-O)
-
+add_compile_options()
 endif()
-if(${APPLE})
 add_compile_options(-fsanitize=undefined -fsanitize=address)
-add_link_options(-fsanitize=undefined -fsanitize=address)
-else()
-add_compile_options(-fsanitize=undefined -fsanitize=leak -fsanitize=address)
-add_link_options(-fsanitize=undefined -fsanitize=leak -fsanitize=address)
-endif()
 add_compile_options(-Wextra -Wall)
-
+add_compile_options(-mavx2 -mavx -msha -maes -mbmi -mbmi2 -mfma -mf16c -mpclmul)
+add_link_options(-fsanitize=undefined -fsanitize=address)
+#im not certain what am i doing
+#the gh actions supports AVX2!
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/)
 add_executable(whimap ${PROJ_SRC})
 include(thirdparty)

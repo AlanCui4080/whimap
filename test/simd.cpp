@@ -1,10 +1,8 @@
-#undef HWY_TARGET_INCLUDE
-#define HWY_TARGET_INCLUDE __FILE__
-#include <hwy/foreach_target.h>
-
-#include <hwy/print-inl.h>
 #include <iostream>
+#include <limits>
 #include "database.hpp"
+#include "simd-utility.hpp"
+#include <hwy/print-inl.h>
 enum
 {
     ERR_RUNTIME_NOT_SATISFIED,
@@ -106,7 +104,8 @@ public:
         for (size_t i = 0; i < vlen; i++)
         {
             if (!whimap::simd::AllTrue(
-                    u.D_tag, u[i] == whimap::simd::Set(u.D_tag, na << (nb % 8))))
+                    u.D_tag,
+                    u[i] == whimap::simd::Set(u.D_tag, na << (nb % 8))))
                 return -ERR_INCORRECT_RS;
         }
         return 0;

@@ -14,15 +14,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
-#ifndef HWY_TARGET_INCLUDE
-#error please_define HWY_TARGET_INCLUDE before refrence all simdfiles
-#endif
 #include <hwy/aligned_allocator.h>
 #include <hwy/highway.h>
 #include "whim_exception.hpp"
 namespace whimap
 {
-    HWY_BEFORE_NAMESPACE();
+    // yes, again we turn it back to static dispatch
     /**
      * @brief a psedo, continous vector of type S
      * 
@@ -140,5 +137,4 @@ namespace whimap
             return op2<simd::HighestSetBitIndex>(rv);
         }
     };
-    HWY_AFTER_NAMESPACE();
 }

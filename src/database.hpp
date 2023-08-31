@@ -20,7 +20,7 @@
 #include <optional>
 #include "whim_framework.hpp"
 #include "whim_exception.hpp"
-#include "simd-utility.hpp"
+
 
 namespace whimap
 {
@@ -28,7 +28,5 @@ namespace whimap
     template <typename S> 
     class column
     {
-        public:
-        using vector_type = expvec<S>;
     };
 } // namespace whimap

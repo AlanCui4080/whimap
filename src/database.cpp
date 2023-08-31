@@ -13,7 +13,5 @@
 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#undef HWY_TARGET_INCLUDE
-#define HWY_TARGET_INCLUDE __FILE__
-#include <hwy/foreach_target.h>
+#include "simd-utility.hpp"
 #include "database.hpp"
