@@ -21,13 +21,13 @@ public:
         auto              p2 = whimap::simd::AllocateAligned<S>(64);
         whimap::expvec<S> a(std::move(p1), 64);
         whimap::expvec<S> b(std::move(p2), 64);
-        constexpr auto    slen = 64;
-        constexpr auto    na   = std::numeric_limits<S>::max() / 2;
-        constexpr auto    lna  = std::numeric_limits<S>::max() / 20;
-        constexpr auto    nb   = std::numeric_limits<S>::max() / 3;
-        constexpr auto    lnb  = std::numeric_limits<S>::max() / 30;
-        constexpr auto    vlen = slen / whimap::simd::Lanes(a.D_tag);
-        using vtype            = whimap::expvec<S>::vector_type;
+        auto    slen = 64;
+        auto    na   = std::numeric_limits<S>::max() / 2;
+        auto    lna  = std::numeric_limits<S>::max() / 20;
+        auto    nb   = std::numeric_limits<S>::max() / 3;
+        auto    lnb  = std::numeric_limits<S>::max() / 30;
+        auto    vlen = slen / whimap::simd::Lanes(a.D_tag);
+        using vtype            = typename whimap::expvec<S>::vector_type;
         for (size_t i = 0; i < vlen; i++)
         {
             vtype& v = a[i];
@@ -89,13 +89,13 @@ public:
         auto              p2 = whimap::simd::AllocateAligned<S>(64);
         whimap::expvec<S> a(std::move(p1), 64);
         whimap::expvec<S> b(std::move(p2), 64);
-        constexpr auto    slen = 64;
-        constexpr auto    na   = std::numeric_limits<S>::max() / 2;
-        constexpr auto    lna  = std::numeric_limits<S>::max() / 2000;
-        constexpr auto    nb   = std::numeric_limits<S>::max() / 3;
-        constexpr auto    lnb  = std::numeric_limits<S>::max() / 3000;
-        constexpr auto    vlen = slen / whimap::simd::Lanes(a.D_tag);
-        using vtype            = whimap::expvec<S>::vector_type;
+        auto    slen = 64;
+        auto    na   = std::numeric_limits<S>::max() / 2;
+        auto    lna  = std::numeric_limits<S>::max() / 2000;
+        auto    nb   = std::numeric_limits<S>::max() / 3;
+        auto    lnb  = std::numeric_limits<S>::max() / 3000;
+        auto    vlen = slen / whimap::simd::Lanes(a.D_tag);
+        using vtype            = typename whimap::expvec<S>::vector_type;
         for (size_t i = 0; i < vlen; i++)
         {
             vtype& v = a[i];
