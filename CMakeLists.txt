@@ -19,9 +19,9 @@ add_link_options(-fsanitize=undefined -fsanitize=address)
 #im not certain what am i doing
 #the gh actions supports AVX2!
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/)
-add_executable(whimap ${PROJ_SRC})
 include(thirdparty)
-
+add_executable(whimap ${PROJ_SRC})
+link_libraries(hwy)
 enable_testing()
 add_subdirectory(test)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CTestCustom.cmake ${CMAKE_CURRENT_BINARY_DIR})

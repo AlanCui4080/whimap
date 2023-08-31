@@ -1,3 +1,3 @@
-pkg_check_modules(HIGHWAY libhwy REQUIRED)
-include_directories(${HIGHWAY_INCLUDE_DIRS})
-link_libraries(${HIGHWAY_LIBRARIES})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/highway/hwy)
+set(HWY_ENABLE_TESTS false)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/highway)

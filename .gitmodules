@@ -1,0 +1,6 @@
+[submodule "thirdparty/highway"]
+	path = thirdparty/highway
+	url = https://github.com/google/highway.git
+[submodule "thirdparty/asio"]
+	path = thirdparty/asio
+	url = https://github.com/chriskohlhoff/asio.git
