@@ -31,7 +31,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Get packages (Linux)
       if: matrix.os == 'ubuntu-latest'
-      run: sudo apt install -y libasio-dev libhwy-dev
+      run: sudo apt install -y libasio-dev libhwy-dev cpuid && sudo cpuid
     - name: Get packages (Macos)
       if: matrix.os == 'macos-13'
       run: brew install highway asio
