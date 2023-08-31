@@ -77,7 +77,7 @@ namespace whimap
                     "tring to operate between two different sized vector");
             auto result = expvec(simd::AllocateAligned<scalar_type>(
                                      vector_count * simd::Lanes(D_tag)),
-                                        vector_count * simd::Lanes(D_tag));
+                                 vector_count * simd::Lanes(D_tag));
             for (size_t i = 0; i < vector_count; i++)
             {
                 result[i] = Opa(vector_data[i], rv.vector_data[i]);
@@ -110,13 +110,33 @@ namespace whimap
         {
             return op2<simd::And>(rv);
         }
+        auto operator^(const expvec<S>& rv) const -> expvec<S>
+        {
+            return op2<simd::Xor>(rv);
+        }
         auto operator<<(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2<simd::ShiftLeft>(rv);
+            return op2<simd::operator<<>(rv);
         }
         auto operator>>(const expvec<S>& rv) const -> expvec<S>
         {
-            return op2<simd::ShiftRight>(rv);
+            return op2<simd::operator>>>(rv);
+        }
+        auto popcount(const expvec<S>& rv) const -> expvec<S>
+        {
+            return op2<simd::PopulationCount>(rv);
+        }
+        auto leading_zerocount(const expvec<S>& rv) const -> expvec<S>
+        {
+            return op2<simd::LeadingZeroCount>(rv);
+        }
+        auto trailing_zerocount(const expvec<S>& rv) const -> expvec<S>
+        {
+            return op2<simd::TrailingZeroCount>(rv);
+        }
+        auto highest_bit_index(const expvec<S>& rv) const -> expvec<S>
+        {
+            return op2<simd::HighestSetBitIndex>(rv);
         }
     };
 } // namespace whimap

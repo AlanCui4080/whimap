@@ -2,34 +2,67 @@
 #include <thread>
 #include <numeric>
 #include <iostream>
+#include <barrier>
 int main()
-{   
-    whimap::rwlock lock;
-    std::array<long,512> a{0};
-    std::array<std::jthread, 2> init_writer{std::jthread([&]() {
-        lock.lock(whimap::rwlock::WRITE);
-        std::for_each(a.begin(),a.end(),[](long& v){v=10;});
-        lock.unlock(whimap::rwlock::WRITE);
-    })};
-    std::mutex mx;
-    std::vector<long> r1,r2;
-    std::array<std::jthread, 14> reader{std::jthread([&]() {
-        std::lock_guard lg(lock);
-        long sum = std::accumulate(a.begin(),a.end(),0);
-        std::lock_guard mx(lock);
-        r1.push_back(sum);
-    })};
-    std::array<std::jthread, 2> writer{std::jthread([&]() {
-        lock.lock(whimap::rwlock::WRITE);
-        std::for_each(a.begin(),a.end(),[](long& v){v=20;});
-        lock.unlock(whimap::rwlock::WRITE);
-    })};
-    std::array<std::jthread, 14> reader2{std::jthread([&]() {
-        std::lock_guard lg(lock);
-        long sum = std::accumulate(a.begin(),a.end(),0);
-        std::lock_guard mx(lock);
-        r2.push_back(sum);
-    })};
-    return (std::accumulate(r1.begin(),r1.end(),0) == 5120)
-    && (std::accumulate(r1.begin(),r1.end(),0) == 10240);
+{
+    whimap::rwlock            lock;
+    std::barrier              lch1(16);
+    std::barrier              lch2(16);
+    std::vector<long>         a(512);
+    std::vector<std::jthread> init_writer;
+    std::mutex                mx2, mx1;
+    std::vector<long>         r1, r2;
+    std::vector<std::jthread> reader;
+    std::vector<std::jthread> writer;
+    std::vector<std::jthread> reader2;
+    for (size_t i = 0; i < 2; i++)
+        init_writer.emplace_back(std::move(std::jthread(
+            [&]()
+            {
+                lch1.arrive_and_wait();
+                lock.lock(whimap::rwlock::WRITE);
+                std::for_each(a.begin(), a.end(), [](long& v) { v = 10; });
+                lock.unlock(whimap::rwlock::WRITE);
+                exit(EXIT_SUCCESS);
+            })));
+
+    for (size_t i = 0; i < 14; i++)
+        reader.emplace_back(std::move(std::jthread(
+            [&]()
+            {
+                lch1.arrive_and_wait();
+                std::lock_guard lg(lock);
+                long            sum = std::accumulate(a.begin(), a.end(), 0);
+                std::lock_guard lmg(mx1);
+                r2.push_back(sum);
+                exit(EXIT_SUCCESS);
+            })));
+    for (size_t i = 0; i < 2; i++)
+        writer.emplace_back(std::move(std::jthread(
+            [&]()
+            {
+                lch2.arrive_and_wait();
+                lock.lock(whimap::rwlock::WRITE);
+                std::for_each(a.begin(), a.end(), [](long& v) { v = 20; });
+                lock.unlock(whimap::rwlock::WRITE);
+                exit(EXIT_SUCCESS);
+            })));
+    for (size_t i = 0; i < 14; i++)
+        reader2.emplace_back(std::move(std::jthread(
+            [&]()
+            {
+                lch2.arrive_and_wait();
+                std::lock_guard lg(lock);
+                long            sum = std::accumulate(a.begin(), a.end(), 0);
+                std::lock_guard lmg(mx2);
+                r2.push_back(sum);
+                exit(EXIT_SUCCESS);
+            })));
+
+    if (!((std::accumulate(r1.begin(), r1.end(), 0) == 5120) &&
+        (std::accumulate(r2.begin(), r2.end(), 0) == 10240)))
+    {
+        exit(EXIT_FAILURE);
+    }
+    return 0;
 };
