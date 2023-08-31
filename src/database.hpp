@@ -143,7 +143,6 @@ namespace whimap
     class column
     {
         public:
-        using scalar_type = expvec<S>;
-        using vector_type = std::vector<scalar_type>;
+        using vector_type = expvec<S>;
     };
 } // namespace whimap
