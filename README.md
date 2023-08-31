@@ -26,7 +26,7 @@ A AP Database cuz of a whim.
   </tr>
   <tr>
     <td class="tg-c3ow">Other</td>
-    <td class="tg-0pky" colspan="4"><span style="font-weight:bold">Must</span> support: SSE4, SHA,  AES, FMA, BMI, BMI2, F16C</td>
+    <td class="tg-0pky" colspan="4"><span style="font-weight:bold">Must</span> support: SSE4, SHA, AES</td>
   </tr>
 </tbody>
 </table>
