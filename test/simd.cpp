@@ -71,6 +71,23 @@ public:
                     d.D_tag, d[i] == whimap::simd::Set(d.D_tag, na - nb)))
                 return -ERR_INCORRECT_SUB;
         }
+        std::cout << std::hex << "Excepted: " << na + nb << std::endl;
+        whimap::simd::Print(c.D_tag, "MUL", c[0], 0, 32);
+        for (size_t i = 0; i < vlen; i++)
+        {
+            if (!whimap::simd::AllTrue(
+                    e.D_tag, c[i] == whimap::simd::Set(c.D_tag, na * nb)))
+                return -ERR_INCORRECT_MUL;
+        }
+        std::cout << std::hex << "Excepted: " << na - nb << std::endl;
+        whimap::simd::Print(d.D_tag, "DIV", d[0], 0, 32);
+
+        for (size_t i = 0; i < vlen; i++)
+        {
+            if (!whimap::simd::AllTrue(
+                    f.D_tag, d[i] == whimap::simd::Set(d.D_tag, na / nb)))
+                return -ERR_INCORRECT_DIV;
+        }
         std::cout << std::hex << "Excepted: " << (na | nb) << std::endl;
         whimap::simd::Print(e.D_tag, "AND", e[0], 0, 32);
 
@@ -111,6 +128,73 @@ public:
         return 0;
     }
 };
+template <typename S> class test<S, true>
+{
+public:
+    int run()
+    {
+        auto              p1 = whimap::simd::AllocateAligned<S>(64);
+        auto              p2 = whimap::simd::AllocateAligned<S>(64);
+        auto              p3 = whimap::simd::AllocateAligned<S>(64);
+        whimap::expvec<S> a(std::move(p1), 64);
+        whimap::expvec<S> b(std::move(p2), 64);
+        whimap::expvec<S> yc(std::move(p3), 64);
+        auto              slen = 64;
+        auto              na   = std::numeric_limits<S>::max() / 2;
+        auto              nb   = std::numeric_limits<S>::max() / 3;
+        auto              vlen = slen / whimap::simd::Lanes(a.D_tag);
+        using vtype            = typename whimap::expvec<S>::vector_type;
+        for (size_t i = 0; i < vlen; i++)
+        {
+            vtype& v = a[i];
+            v        = whimap::simd::Set(a.D_tag, na);
+        }
+        for (size_t i = 0; i < vlen; i++)
+        {
+            vtype& v = b[i];
+            v        = whimap::simd::Set(b.D_tag, nb);
+        }
+        auto e = a * b;
+        auto f = a / b;
+        auto c = a + b;
+        auto d = a - b;
+        std::cout << std::hex << "Excepted: " << na + nb << std::endl;
+        whimap::simd::Print(c.D_tag, "ADD", c[0], 0, 32);
+        for (size_t i = 0; i < vlen; i++)
+        {
+            if (!whimap::simd::AllTrue(
+                    c.D_tag, c[i] == whimap::simd::Set(c.D_tag, na + nb)))
+                return -ERR_INCORRECT_ADD;
+        }
+        std::cout << std::hex << "Excepted: " << na - nb << std::endl;
+        whimap::simd::Print(d.D_tag, "SUB", d[0], 0, 32);
+
+        for (size_t i = 0; i < vlen; i++)
+        {
+            if (!whimap::simd::AllTrue(
+                    d.D_tag, d[i] == whimap::simd::Set(d.D_tag, na - nb)))
+                return -ERR_INCORRECT_SUB;
+        }
+        std::cout << std::hex << "Excepted: " << na + nb << std::endl;
+        whimap::simd::Print(c.D_tag, "MUL", c[0], 0, 32);
+        for (size_t i = 0; i < vlen; i++)
+        {
+            if (!whimap::simd::AllTrue(
+                    e.D_tag, c[i] == whimap::simd::Set(c.D_tag, na * nb)))
+                return -ERR_INCORRECT_MUL;
+        }
+        std::cout << std::hex << "Excepted: " << na - nb << std::endl;
+        whimap::simd::Print(d.D_tag, "DIV", d[0], 0, 32);
+
+        for (size_t i = 0; i < vlen; i++)
+        {
+            if (!whimap::simd::AllTrue(
+                    f.D_tag, d[i] == whimap::simd::Set(d.D_tag, na / nb)))
+                return -ERR_INCORRECT_DIV;
+        }
+        return 0;
+    }
+};
 int main()
 {
     if (!(HWY_SUPPORTED_TARGETS & HWY_AVX2))
@@ -147,7 +231,8 @@ int main()
     TEST_SIMD(uint32_t);
     TEST_SIMD(uint64_t);
     // removed fps, we dont really need it and it will broken things
-    // TEST_SIMD(float);
-    // TEST_SIMD(double);
+    // recovery it back
+    TEST_SIMD(float);
+    TEST_SIMD(double);
     return 0;
 }
