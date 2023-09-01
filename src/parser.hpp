@@ -14,35 +14,17 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
-#include <vector>
+#include <sstream>
 #include <asio.hpp>
-#include <mutex>
-#include <future>
-#include <semaphore>
-#include "whim_exception.hpp"
-#include "transaction.hpp"
+#include "database.hpp"
 namespace whimap
 {
-    class session
+    class parser : public column_base
     {
-    private:
-        asio::ip::tcp::socket peer;
-    public:
-        session() = delete;
-        session(asio::ip::tcp::socket&& pr);
-    };
-    class server
-    {
-    public:
-        static constexpr auto port = 7878;
+        std::stringstream input;
 
-    private:
-        asio::io_context        context;
-        asio::ip::tcp::acceptor acceptor;
-        asio::ip::tcp::endpoint endpoint;
-        std::vector<session>    session_list;
-        server(int prt = port);
     public:
-        
+        parser() = delete;
+        parser(std::stringstream&& istr);
     };
 } // namespace whimap

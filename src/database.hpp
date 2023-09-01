@@ -24,7 +24,10 @@
 
 namespace whimap
 {
-    
+    class column_base
+    {
+
+    };
     template <typename S> 
     class column
     {
