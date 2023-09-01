@@ -33,7 +33,7 @@ jobs:
       run: git submodule update --init --recursive
     - name: Get packages (Linux)
       if: matrix.os == 'ubuntu-latest'
-      run: sudo apt install -y libasio-dev libhwy-dev cpuid && sudo cpuid
+      run: sudo apt install -y libasio-dev libhwy-dev cpuid bison flex && sudo cpuid
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
