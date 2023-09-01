@@ -41,9 +41,8 @@ session::session(asio::ip::tcp::socket&& pr)
 {
     while (true)
     {
-        asio::mutable_buffer buf;
-        peer.receive(buf);
-        auto par = parser(
-            std::stringstream(std::string(static_cast<char*>(buf.data()))));
+        // asio::mutable_buffer buf;
+        // peer.receive(buf);
+        auto par = parser(peer.native_handle());
     }
 }

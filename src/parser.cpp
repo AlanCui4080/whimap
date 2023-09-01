@@ -15,9 +15,27 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "parser.hpp"
 using namespace whimap;
-
-parser::parser(std::stringstream&& str)
-    : input(std::move(str))
+//clear the warning -Wunused-function
+#define YY_NO_UNPUT
+//get C linkage
+extern "C"
 {
-    
+//rename it to hpp to avoid pre-complie
+#include "sqllex.cpp.hpp"
+}
+#include <cstdio>
+#include <unistd.h>
+parser::parser(file_descriptor ifd)
+{
+    __plex = &this->lex;
+   __run_lexer(fdopen(ifd,"r"));
+}
+parser::parser(file_pointer ifp)
+{
+    __plex = &this->lex;
+   __run_lexer(ifp);
+}
+auto parser::lexdata() const -> const std::vector<sql>&
+{
+    return lex;
 }

@@ -16,16 +16,34 @@
 #pragma once
 #include <sstream>
 #include <asio.hpp>
+#include <cstdio>
+#include <vector>
 #include "database.hpp"
 #include "transaction.hpp"
 namespace whimap
 {
     class parser : public transaction_base
     {
-        std::stringstream input;
+    public:
+        using file_descriptor = asio::detail::socket_type;
+        using file_pointer    = std::FILE*;
+
+        enum sql
+        {
+            SELECT,
+            WHERE,
+            FROM,
+            AND,
+            OR,
+            CREATE,
+            DROP,
+            TABLE,
+        };
+        std::vector<sql> lex;
 
     public:
-        parser() = delete;
-        parser(std::stringstream&& istr);
+        parser(file_pointer ifp);
+        parser(file_descriptor ifd);
+        auto lexdata() const -> const std::vector<sql>&;
     };
 } // namespace whimap
