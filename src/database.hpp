@@ -53,24 +53,23 @@ namespace whimap
             mdata = std::move(vector_type(std::move(aligned_ptr), vec.size()));
         }
     };
-    // template <typename T, typename S>
-    // class basic_bitmap_column : public basic_hashed_column<T, S>
-    // {
-    // public:
-    //     using value_type    = T;
-    //     using scala_type    = S;
-    //     using vector_type   = expvec<scala_type>;
-    //     using bitarray_type = expvec<vector_type>;
+    template <typename T, typename S>
+    class basic_bitmap_column : public basic_hashed_column<T,S>
+    {
+    public:
+        using value_type    = T;
+        using scala_type    = S;
+        using vector_type   = expvec<scala_type>;
 
-    // private:
-    //     bitarray_type m_bitarray;
+    private:
 
-    // public:
-    //     // get a empty column not impl yet :(
-    //     basic_bitmap_column() = delete;
-    //     // create a column filled with vec XD
-    //     basic_bitmap_column(const std::vector<value_type>& vec);
-    // };
+    public:
+        // get a empty column not impl yet :(
+        basic_bitmap_column() = delete;
+        // create a column filled with vec XD
+        basic_bitmap_column(const std::vector<value_type>& vec)
+            : basic_hashed_column<T,S>(vec){};
+    };
     template <typename T>
     using hashed_column = basic_hashed_column<T, simd::float16_t>;
 } // namespace whimap
