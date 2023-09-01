@@ -16,23 +16,11 @@
 #pragma once
 #include <concepts>
 #include <mutex>
-#include <semaphore>
-#include <atomic>
 #include <type_traits>
+#include <atomic>
 namespace whimap
 {
-/**
- * @brief ailgnas a cacheline
- */
-#define align_cache alignas(32)
-/**
- * @brief ailgnas the memory alignment required by the simd
- * @tparam type of value
- */
-#define align_simd(T)                              \
-    alignas(std::experimental::memory_alignment_v< \
-            std::experimental::native_simd<T>>)
- /** @brief A lock allows parallel reading, exclusive writing
+    /** @brief A lock allows parallel reading, exclusive writing
    *
    * A rwlock maintains a count to allow multiply readers to enter
    * the critical section, and only allow one writer to enter it when

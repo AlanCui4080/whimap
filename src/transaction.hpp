@@ -21,21 +21,35 @@
 #include <functional>
 
 #include "database.hpp"
-#include "transcation_impl.hpp"
 namespace whimap
 {
-    using worker_base = std::thread;
-    class worker : public worker_base
+    class worker : public std::thread
+    {
+    };
+    class transaction_base
     {
     };
     template <typename T>
-    class transaction : std::future<T>
+    class transaction : public std::future<T>, public transaction_base
     {
         friend class worker;
 
     public:
-        using type_enum = job_enum;
-        using col_type  = T;
+        typedef enum
+        {
+            TRANSACTION_UNKNOWN = 0,
+            TRANSACTION_NUM_SUM,
+            TRANSACTION_NUM_AVG,
+            TRANSACTION_NUM_MIN,
+            TRANSACTION_NUM_MAX,
+            TRANSACTION_NUM_ROUND,
+            TRANSACTION_LOGIC_COUNT,
+            TRANSACTION_LOGIC_HAVING,
+            TRANSACTION_LOGIC_EXISTS,
+            TRANSACTION_LOGIC_GROUPBY,
+            TRANSACTION_MAX,
+        } type_enum;
+        using col_type = T;
 
     private:
         std::vector<transaction*> dependencies;

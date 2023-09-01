@@ -17,9 +17,10 @@
 #include <sstream>
 #include <asio.hpp>
 #include "database.hpp"
+#include "transaction.hpp"
 namespace whimap
 {
-    class parser : public column_base
+    class parser : public transaction_base
     {
         std::stringstream input;
 
