@@ -16,6 +16,7 @@
 #pragma once
 #include <stdexcept>
 #include <exception>
+#include <type_traits>
 #include <system_error>
 
 #include <cstring>
@@ -24,7 +25,7 @@ namespace whimap
     class network_failure : public std::system_error
     {
         public:
-        network_failure(decltype(errno) v,const char* s)
+        network_failure(const std::remove_reference_t<decltype(errno)> v,const char* s)
         : system_error(std::error_code(v,std::generic_category()),s){};
     };
     class simd_failure : public std::domain_error
