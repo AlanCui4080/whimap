@@ -27,12 +27,14 @@ namespace whimap
     {
     private:
         asio::ip::tcp::socket peer;
+
     public:
         session() = delete;
         session(asio::ip::tcp::socket&& pr);
     };
     class server
     {
+    private:
     public:
         static constexpr auto port = 7878;
 
@@ -41,8 +43,11 @@ namespace whimap
         asio::ip::tcp::acceptor acceptor;
         asio::ip::tcp::endpoint endpoint;
         std::vector<session>    session_list;
-        server(int prt = port);
+
     public:
-        
+        server(int prt = port, /*FOR TEST: MUST AT END**/ bool do_no_exit = true);
+        //for test
+        explicit server(nullptr_t)
+            : server(port, false){};
     };
 } // namespace whimap

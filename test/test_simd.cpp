@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits>
+#include <stdfloat>
 #include "database.hpp"
 #include "simd-utility.hpp"
 #include <hwy/print-inl.h>
@@ -70,23 +71,6 @@ public:
             if (!whimap::simd::AllTrue(
                     d.D_tag, d[i] == whimap::simd::Set(d.D_tag, na - nb)))
                 return -ERR_INCORRECT_SUB;
-        }
-        std::cout << std::hex << "Excepted: " << na + nb << std::endl;
-        whimap::simd::Print(c.D_tag, "MUL", c[0], 0, 32);
-        for (size_t i = 0; i < vlen; i++)
-        {
-            if (!whimap::simd::AllTrue(
-                    e.D_tag, c[i] == whimap::simd::Set(c.D_tag, na * nb)))
-                return -ERR_INCORRECT_MUL;
-        }
-        std::cout << std::hex << "Excepted: " << na - nb << std::endl;
-        whimap::simd::Print(d.D_tag, "DIV", d[0], 0, 32);
-
-        for (size_t i = 0; i < vlen; i++)
-        {
-            if (!whimap::simd::AllTrue(
-                    f.D_tag, d[i] == whimap::simd::Set(d.D_tag, na / nb)))
-                return -ERR_INCORRECT_DIV;
         }
         std::cout << std::hex << "Excepted: " << (na | nb) << std::endl;
         whimap::simd::Print(e.D_tag, "AND", e[0], 0, 32);
@@ -175,21 +159,21 @@ public:
                     d.D_tag, d[i] == whimap::simd::Set(d.D_tag, na - nb)))
                 return -ERR_INCORRECT_SUB;
         }
-        std::cout << std::hex << "Excepted: " << na + nb << std::endl;
-        whimap::simd::Print(c.D_tag, "MUL", c[0], 0, 32);
+        std::cout << std::hex << "Excepted: " << na * nb << std::endl;
+        whimap::simd::Print(e.D_tag, "MUL", e[0], 0, 32);
         for (size_t i = 0; i < vlen; i++)
         {
             if (!whimap::simd::AllTrue(
-                    e.D_tag, c[i] == whimap::simd::Set(c.D_tag, na * nb)))
+                    e.D_tag, e[i] == whimap::simd::Set(e.D_tag, na * nb)))
                 return -ERR_INCORRECT_MUL;
         }
         std::cout << std::hex << "Excepted: " << na - nb << std::endl;
-        whimap::simd::Print(d.D_tag, "DIV", d[0], 0, 32);
+        whimap::simd::Print(f.D_tag, "DIV", f[0], 0, 32);
 
         for (size_t i = 0; i < vlen; i++)
         {
             if (!whimap::simd::AllTrue(
-                    f.D_tag, d[i] == whimap::simd::Set(d.D_tag, na / nb)))
+                    f.D_tag, f[i] == whimap::simd::Set(f.D_tag, na / nb)))
                 return -ERR_INCORRECT_DIV;
         }
         return 0;
@@ -232,6 +216,8 @@ int main()
     TEST_SIMD(uint64_t);
     // removed fps, we dont really need it and it will broken things
     // recovery it back
+    using namespace std;
+    
     TEST_SIMD(float);
     TEST_SIMD(double);
     return 0;
