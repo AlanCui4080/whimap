@@ -15,3 +15,5 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "simd-utility.hpp"
 #include "database.hpp"
+std::vector<int> d({555,666,777});
+whimap::hashed_column<int> a(d);

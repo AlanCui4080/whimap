@@ -40,8 +40,7 @@ include_directories(GLOB ${CMAKE_CURRENT_BINARY_DIR}/lexbison)
 
 file(GLOB PROJ_SRC ${PROJECT_SOURCE_DIR}/src/*.cpp)
 add_executable(whimap ${PROJ_SRC} ${FLEX_sql_scanner_OUTPUTS})
-target_link_libraries(whimap ${FLEX_LIBRARIES})
-link_libraries(hwy)
+target_link_libraries(whimap ${FLEX_LIBRARIES} hwy)
 
 enable_testing()
 add_subdirectory(test)

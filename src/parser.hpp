@@ -22,7 +22,7 @@
 #include "transaction.hpp"
 namespace whimap
 {
-    class parser : public transaction_base
+    class parser
     {
     public:
         using file_descriptor = asio::detail::socket_type;

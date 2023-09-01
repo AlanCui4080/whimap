@@ -1,5 +1,6 @@
 file(GLOB PROJ_EXCLU_MAIN_SRC ${PROJECT_SOURCE_DIR}/src/*.cpp)
 list(REMOVE_ITEM  PROJ_EXCLU_MAIN_SRC ${PROJECT_SOURCE_DIR}/src/main.cpp)
+link_libraries(hwy)
 add_executable(rwlock_race test_rwlock_race.cpp)
 add_test(NAME rw_lock COMMAND rwlock_race )
 set_tests_properties(rw_lock PROPERTIES TIMEOUT 10)

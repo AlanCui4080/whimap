@@ -14,6 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
+#ifdef B0 // was defined in termios.h will override hwy
+#undef B0
+#endif
 #include <hwy/aligned_allocator.h>
 #include <hwy/highway.h>
 #include "whim_exception.hpp"
@@ -49,6 +52,7 @@ namespace whimap
         size_t            vector_count;
 
     public:
+        expvec(){};
         expvec(scalar_unique_ptr&& pa, size_t count)
             : vector_data(reinterpret_cast<vector_type*>(pa.release()))
             , vector_count(count / simd::Lanes(D_tag))
