@@ -32,6 +32,7 @@ namespace whimap
     class rwlock
     {
     private:
+        std::mutex      metadata_lck;
         std::atomic_int reader_count = 0;
 
     public:
@@ -51,20 +52,21 @@ namespace whimap
         {
             if (me == READ)
             {
-                int i = -1;
-                while (reader_count.compare_exchange_strong(i, -1))
-                {
-                    reader_count.wait(i);
-                }
+                metadata_lck.lock();
                 reader_count++;
+                metadata_lck.unlock();
             }
             else if (me == WRITE)
             {
-                int i = 0;
-                while (!reader_count.compare_exchange_strong(i, -1))
+                metadata_lck.lock();
+                if (reader_count != 0)
                 {
-                    reader_count.wait(i);
-                    i = 0;
+                    metadata_lck.unlock();
+                    while (reader_count != 0)
+                    {
+                        reader_count.wait(-1);
+                    }
+                    metadata_lck.lock();
                 }
             }
         }
@@ -79,14 +81,14 @@ namespace whimap
         {
             if (me == READ)
             {
+                metadata_lck.lock();
                 reader_count--;
-                if (!reader_count)
-                    reader_count.notify_one();
+                reader_count.notify_all();
+                metadata_lck.unlock();
             }
             else if (me == WRITE)
             {
-                reader_count++;
-                reader_count.notify_all();
+                metadata_lck.unlock();
             }
         }
     };

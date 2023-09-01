@@ -132,6 +132,7 @@ namespace whimap
         // search from global namespace
         // god damn it, forget to remove simd::
         // update: add a alias for ::hwy::HWY_NAMESPACE
+        #if 0
         auto leading_zerocount(const expvec<S>& rv) const -> expvec<S>
         {
             return op2<simd::LeadingZeroCount>(rv);
@@ -144,5 +145,6 @@ namespace whimap
         {
             return op2<simd::HighestSetBitIndex>(rv);
         }
+        #endif
     };
 }
